@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import Home from './Home';
 import About from './About';
@@ -11,21 +11,27 @@ import Users from './Users';
 import Createuser from './Createuser';
 import Pageerror from './Pageerror';
 import Apiuser from './Apiuser';
+import SingleUser from './SingleUser';
 
 export default function Header() {
 
     const [userfirst, setuserfirst] = useState([]);
+    const [loadapi, setLoadapi] = useState(false);
 
     useEffect(() => {
-        fetch('https://jsonplaceholder.typicode.com/comments').then((data) => {
+        fetch('https://api.github.com/users').then((data) => {
             data.json().then((result) => {
                 setuserfirst(result);
+                setLoadapi(true);
             });
         });
-     },[]);
+    }, []);
+
 
     return (
         <>
+
+
             <Router>
 
                 <nav>
@@ -57,12 +63,15 @@ export default function Header() {
                     <Route path="/users" element={<Users />} />
                     <Route path="/createusers" element={<Createuser />} />
                     <Route path="/contact" element={<Contactus />} />
-                    <Route path="/apiuser" element={<Apiuser data={userfirst}/>} />
+                    <Route path="/singleUser/:id" element={<SingleUser data={userfirst} loadapistatus={loadapi} />} />
+                    <Route path="/apiuser" element={<Apiuser data={userfirst} loadapistatus={loadapi} />} />
                     <Route path="/" element={<Home />} />
                     <Route path="*" element={<Pageerror />} />
                 </Routes>
 
             </Router>
+
+
         </>
     )
 }
